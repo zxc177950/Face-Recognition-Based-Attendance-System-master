@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>dataManageUI</class>
+ <widget class="QWidget" name="dataManageUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1637</width>
+    <height>941</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>人脸识别考勤管理系统 - 数据管理端</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout_3">
+   <item>
+    <widget class="QGroupBox" name="faceDbGroupBox">
+     <property name="title">
+      <string>人脸库</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QSplitter" name="splitter">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <widget class="QGroupBox" name="dbVisualGroupBox">
+         <property name="title">
+          <string>数据库表格</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <widget class="QTableWidget" name="tableWidget">
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <property name="sortingEnabled">
+             <bool>true</bool>
+            </property>
+            <attribute name="horizontalHeaderCascadingSectionResizes">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="horizontalHeaderStretchLastSection">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="verticalHeaderCascadingSectionResizes">
+             <bool>true</bool>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>工号</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Face ID</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>姓名</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>汉语拼音</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>部门</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>入职时间</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>小组</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>性别</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>籍贯</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>民族</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>需出勤次数</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>总签到次数</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>注册时间</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>出勤率</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="tipLabel">
+            <property name="text">
+             <string>                                                           注：Face ID为 -1 说明该用户的人脸数据未被训练</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QGroupBox" name="logGroupBox">
+         <property name="title">
+          <string>系统日志</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QTextEdit" name="logTextEdit">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="queryUserGroupBox">
+            <property name="title">
+             <string>数据库查询</string>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout">
+               <item>
+                <widget class="QLineEdit" name="querystuIDLineEdit">
+                 <property name="placeholderText">
+                  <string>请输入要查询的10位工号</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="queryNameLineEdit">
+                 <property name="placeholderText">
+                  <string>请输入要查询的姓名</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="queryenNameLineEdit">
+                 <property name="placeholderText">
+                  <string>请输入要查询的姓名拼音</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="queryMajorLineEdit">
+                 <property name="placeholderText">
+                  <string>请输入要查询的部门</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="queryGradeLineEdit">
+                 <property name="placeholderText">
+                  <string>请输入要查询的入职时间</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="queryClassLineEdit">
+                 <property name="placeholderText">
+                  <string>请输入要查询的小组</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="queryProvinceLineEdit">
+                 <property name="placeholderText">
+                  <string>请输入要查询的籍贯</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="queryNationLineEdit">
+                 <property name="placeholderText">
+                  <string>请输入要查询的民族</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="LikeSelectCheckBox">
+                 <property name="text">
+                  <string>模糊查询</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="queryUserButton">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="toolTip">
+                  <string>数据库未完成初始化，请检查</string>
+                 </property>
+                 <property name="text">
+                  <string>查询</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="ExportExcelpushButton">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="text">
+                  <string>导出Excel表格</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="LogmanagepushButton">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="toolTip">
+                  <string>数据库未完成初始化，请检查</string>
+                 </property>
+                 <property name="text">
+                  <string>考勤日志管理</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="dbManageGroupBox">
+            <property name="title">
+             <string>数据管理</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <item>
+              <widget class="QGroupBox" name="dbStatusGroupBox">
+               <property name="title">
+                <string>数据库状态</string>
+               </property>
+               <layout class="QGridLayout" name="gridLayout">
+                <item row="0" column="0">
+                 <widget class="QPushButton" name="initDbButton">
+                  <property name="text">
+                   <string>初始化数据库</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <layout class="QHBoxLayout" name="dbUserCountHorizontalLayout">
+                  <item>
+                   <widget class="QLabel" name="dbUserCountLabel">
+                    <property name="text">
+                     <string>数据库已存人脸样本数：</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLCDNumber" name="dbUserCountLcdNum">
+                    <property name="segmentStyle">
+                     <enum>QLCDNumber::Flat</enum>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="trainGroupBox">
+            <property name="title">
+             <string>训练数据</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_6">
+             <item row="1" column="0">
+              <widget class="QGroupBox" name="imgPreprocessGroupBox">
+               <property name="title">
+                <string>图像预处理</string>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_5">
+                <item>
+                 <widget class="QPushButton" name="trainButton">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="toolTip">
+                   <string>数据库未完成初始化，请检查</string>
+                  </property>
+                  <property name="text">
+                   <string>局部二值模式训练</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="dlibButton">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="toolTip">
+                   <string>数据库未完成初始化，请检查</string>
+                  </property>
+                  <property name="text">
+                   <string>dlib特征点提取</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QCheckBox" name="equalizeHistCheckBox">
+               <property name="text">
+                <string>直方图均衡化</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="deleteUserGroupBox">
+            <property name="title">
+             <string>数据库管理用户</string>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <widget class="QPushButton" name="deleteUserButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;未选择用户数据，请在数据表格中选择用户数据再删除。按住Ctrl可以多选非相邻行，按住shift可以连续选择多条相邻行&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string>删除记录</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="CellChangeButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="toolTip">
+                <string>数据库未完成初始化，请检查</string>
+               </property>
+               <property name="text">
+                <string>允许编辑</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
