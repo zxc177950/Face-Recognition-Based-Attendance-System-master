@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
 ###########################################################################
-## Python code generated with wxFormBuilder (version Jun 17 2015)
-## http://www.wxformbuilder.org/
-## by Kuroneko
-## PLEASE DO "NOT" EDIT THIS FILE!
+#登录注册系统
+
+
 ###########################################################################
 import sys
 
@@ -27,7 +26,7 @@ from dataRecord import DataRecordUI
 class loginFrame(wx.Frame):
 
     def __init__(self, parent):  # 框体布局
-        wx.Frame.__init__(self, parent, id=wx.ID_ANY, title=u"KuroNeko_Client——欢迎", pos=wx.DefaultPosition,
+        wx.Frame.__init__(self, parent, id=wx.ID_ANY, title=u"考勤系统——欢迎", pos=wx.DefaultPosition,
                           size=wx.Size(330, 193), style=wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
 
         self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
@@ -102,6 +101,7 @@ class loginFrame(wx.Frame):
     def __del__(self):
         pass
 
+    #连接数据库
     @staticmethod
     def connect_sql():
         try:
@@ -113,7 +113,7 @@ class loginFrame(wx.Frame):
             wx.MessageBox('数据库连接错误')
             return None, None
 
-    # Virtual event handlers, overide them in your derived class
+    # 登录数据管理系统
     def loginFunc_manage(self, event):  # 登录
 
         conn, cur = self.connect_sql()
@@ -130,7 +130,7 @@ class loginFrame(wx.Frame):
             cur.execute(sql)
             conn.commit()
             user = cur.fetchone()
-            if user is None:
+            if user is None:                 #用户名不存在
                 wx.MessageBox('用户不存在', caption="错误提示")
                 self.username.Clear()
                 self.password.Clear()
@@ -146,13 +146,13 @@ class loginFrame(wx.Frame):
             app = QApplication(sys.argv)
             window = DataManageUI()
             window.show()
-            sys.exit(app.exec())
+            sys.exit(app.exec())   #关闭界面
         else:
             wx.MessageBox('用户名或者密码错误', caption="错误提示")
             self.username.Clear()
             self.password.Clear()
             return
-
+    #登录考勤监控端
     def loginFunc_core(self, event):  # 登录
 
         conn, cur = self.connect_sql()
@@ -192,6 +192,7 @@ class loginFrame(wx.Frame):
             self.password.Clear()
             return
 
+    #登录数据录端
     def loginFunc_record(self, event):  # 登录
 
         conn, cur = self.connect_sql()
@@ -231,6 +232,7 @@ class loginFrame(wx.Frame):
             self.password.Clear()
             return
 
+    #注册系统
     def registerFunc(self, event):  # 注册
         try:
             conn = pymysql.connect(host='localhost', user='root', password='1779508535', db='mytest', port=3306,

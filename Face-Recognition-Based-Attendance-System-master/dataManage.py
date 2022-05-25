@@ -213,7 +213,7 @@ class DataManageUI(QWidget):
             self.CellChangeButton.setText('禁用编辑')
             self.enable_write_table()
 
-    # 启用编辑时学号和faceID禁止修改
+    # 启用编辑时工号和faceID禁止修改
     def enable_write_table(self):
         row_count = self.tableWidget.rowCount()
         for row in range(row_count):
@@ -241,9 +241,9 @@ class DataManageUI(QWidget):
     # 筛选选中数据
     def enable_delete_button(self, item):
         self.current_select.clear()
-        select_items = self.tableWidget.selectedItems()[::self.tableWidget.columnCount()]  # 取出所有选择数据中的学号
+        select_items = self.tableWidget.selectedItems()[::self.tableWidget.columnCount()]  # 取出所有选择数据中的工号
         self.current_select.update(
-            map(lambda x: x.text(), select_items))  # 更新学号信息到set集合中,因为用的是map映射整个list的内容，因此用update而不是add
+            map(lambda x: x.text(), select_items))  # 更新工号信息到set集合中,因为用的是map映射整个list的内容，因此用update而不是add
         # print(self.current_select)
         if self.current_select and self.CellChangeButton.text() != '禁用编辑':
             self.deleteUserButton.setEnabled(True)
@@ -282,7 +282,7 @@ class DataManageUI(QWidget):
             stu_data = cursor.fetchall()
             # print(stu_data)
             self.print_to_table(stu_data)  # 输出到表格界面
-            cursor.execute('SELECT Count(*) FROM users')  # 学生计数
+            cursor.execute('SELECT Count(*) FROM users')  #员工计数
             result = cursor.fetchone()
             dbUserCount = result[0]
         except FileNotFoundError:
@@ -323,7 +323,7 @@ class DataManageUI(QWidget):
 
     # 查询用户
     def queryUser(self):
-        # 获取输入框学号
+        # 获取输入框工号
         select_data = dict()
         select_data['stu_id'] = self.querystuIDLineEdit.text().strip()
         select_data['cn_name'] = self.queryNameLineEdit.text().strip()
@@ -578,16 +578,16 @@ class TrainData(QThread):
             self.progress_bar_signal.emit(bar)
             if not dir_name.startswith('stu_'):  # 跳过不合法的图片集
                 continue
-            stu_id = dir_name.replace('stu_', '')  # 获取图片集对应的学号
+            stu_id = dir_name.replace('stu_', '')  # 获取图片集对应的工号
             try:
-                cursor.execute('SELECT * FROM users WHERE stu_id=%s', (stu_id,))  # 根据学号查询学生信息
+                cursor.execute('SELECT * FROM users WHERE stu_id=%s', (stu_id,))  # 根据工号查询员工信息
                 ret = cursor.fetchall()
                 if not ret:
                     raise RecordNotFound  # 在try里raise错误类型，在except里再处理
                 cursor.execute('UPDATE users SET face_id=%s WHERE stu_id=%s', (face_id, stu_id,))  # 对可以训练的人脸设置face_id
             except RecordNotFound:
-                logging.warning('数据库中找不到学号为{}的用户记录'.format(stu_id))
-                DataManageUI.logQueue.put('发现学号为{}的人脸数据，但数据库中找不到相应记录，已忽略'.format(stu_id))
+                logging.warning('数据库中找不到工号为{}的用户记录'.format(stu_id))
+                DataManageUI.logQueue.put('发现工号为{}的人脸数据，但数据库中找不到相应记录，已忽略'.format(stu_id))
                 continue
             subject_dir_path = os.path.join(data_folder_path, dir_name)  # 子目录
             subject_images_names = os.listdir(subject_dir_path)  # 获取所有图片名
@@ -678,17 +678,17 @@ class TrainDataByDlib(QThread):
                 self.progress_bar_signal.emit(bar)
                 if not dir_name.startswith('stu_'):  # 跳过不合法命名的图片集
                     continue
-                stu_id = dir_name.replace('stu_', '')  # 获取图片集对应的学号
+                stu_id = dir_name.replace('stu_', '')  # 获取图片集对应的工号
                 try:
-                    cursor.execute('SELECT * FROM users WHERE stu_id=%s', (stu_id,))  # 根据学号查询学生信息
+                    cursor.execute('SELECT * FROM users WHERE stu_id=%s', (stu_id,))  # 根据工号查询员工信息
                     ret = cursor.fetchall()
                     if not ret:
                         raise RecordNotFound  # 在try里raise错误类型，在except里再处理
                     cursor.execute('UPDATE users SET face_id=%s WHERE stu_id=%s',
                                    (face_id, stu_id,))  # 对可以训练的人脸设置face_id
                 except RecordNotFound:
-                    logging.warning('数据库中找不到学号为{}的用户记录'.format(stu_id))
-                    DataManageUI.logQueue.put('发现学号为{}的人脸数据，但数据库中找不到相应记录，已忽略'.format(stu_id))
+                    logging.warning('数据库中找不到工号为{}的用户记录'.format(stu_id))
+                    DataManageUI.logQueue.put('发现工号为{}的人脸数据，但数据库中找不到相应记录，已忽略'.format(stu_id))
                     continue
                 subject_dir_path = os.path.join(data_folder_path, dir_name)  # 子目录
                 subject_images_names = os.listdir(subject_dir_path)  # 获取所有图片名
@@ -756,7 +756,7 @@ class ManageLogDialog(QDialog):
             self.CellChangeButton.setText('禁用编辑')
             self.enable_write_table()
 
-        # 启用编辑时学号和faceID禁止修改
+        # 启用编辑时工号和faceID禁止修改
 
     def enable_write_table(self):
         row_count = self.show_log.rowCount()
@@ -837,7 +837,7 @@ class ManageLogDialog(QDialog):
         select_items = self.show_log.selectedItems()[::self.show_log.columnCount()]  # 取出所有选择数据编号
         print(select_items)
         self.current_select.update(
-            map(lambda x: x.text(), select_items))  # 更新学号信息到set集合中,因为用的是map映射整个list的内容，因此用update而不是add
+            map(lambda x: x.text(), select_items))  # 更新工号信息到set集合中,因为用的是map映射整个list的内容，因此用update而不是add
         # print(self.current_select)
         if self.current_select and self.CellChangeButton.text() != '禁用编辑':
             self.deleteLogButton.setEnabled(True)
@@ -1053,7 +1053,7 @@ class ExportExcelDialog(QDialog):
         if not os.path.isdir('./export_excel'):  # 导出结果存储目录
             os.makedirs('./export_excel')
         save_path = os.path.join('./export_excel', self.select_table + '.xls')
-        head_list = ['学号', '姓名', '是否出勤', '出勤时间']
+        head_list = ['工号', '姓名', '是否出勤', '出勤时间']
         xls = ExcelWrite.Workbook()  # 创建Excel控制对象
         sheet = xls.add_sheet("Sheet1")  # 创建被写入的表格sheet1
         style = XFStyle()

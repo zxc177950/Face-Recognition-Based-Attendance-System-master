@@ -57,7 +57,7 @@ def cv2ImgAddText(img, text, left, top, text_color=(0, 0, 255)):
     # 转换回OpenCV格式
     return cv2.cvtColor(numpy.asarray(img), cv2.COLOR_RGB2BGR)
 
-
+#连接数据库
 def connect_to_sql():
     conn = pymysql.connect(host='localhost',
                            user='root',
@@ -80,7 +80,7 @@ class DatabaseNotFoundError(FileNotFoundError):
 
 
 class CoreUI(QMainWindow):
-    database = 'users'  # sqlite 数据库路径，存储学生信息文本
+    database = 'users'  # sqlite 数据库路径，存储用户信息文本
     trainingData = './recognizer/trainingData.yml'  # 训练数据路径【由数据录入时生成】
     dlib_features_data = './dlib_128D_csv/features_all.csv'  # dlib人脸特征数据
     cap = cv2.VideoCapture()  # OpenCV获取视频源方法
@@ -156,8 +156,8 @@ class CoreUI(QMainWindow):
 
         # 帮助与支持
         self.viewGithubRepoButton.clicked.connect(
-            lambda: webbrowser.open('https://github.com/kuronekonano/Face-Recognition-Based-Attendance-System/'))
-        self.contactDeveloperButton.clicked.connect(lambda: webbrowser.open('https://t.me/kuronekonano'))
+            lambda: webbrowser.open('https://github.com/zxc177950/Face-Recognition-Based-Attendance-System-master.git'))
+        self.contactDeveloperButton.clicked.connect(lambda: webbrowser.open('https://github.com/zxc177950'))
 
         # 日志系统
         self.receiveLogSignal.connect(lambda log: self.logOutput(log))  # 日志系统信号绑定输出功能
@@ -182,14 +182,17 @@ class CoreUI(QMainWindow):
             result = cursor.fetchone()
             dbUserCount = result[0]
         except DatabaseNotFoundError:
+            #没有数据库表
             logging.error('系统找不到数据库表{}'.format('users'))
             self.initDbButton.setIcon(QIcon('./icons/error.png'))
             self.logQueue.put('Error：未发现数据库文件，你可能未进行人脸采集')
         except TrainingDataNotFoundError:
+            #没有人脸数据
             logging.error('系统找不到已训练的人脸数据{}'.format(self.trainingData))
             self.initDbButton.setIcon(QIcon('./icons/error.png'))
             self.logQueue.put('Error：未发现已训练的人脸数据文件，请完成训练后继续')
         except Exception as e:
+            #数据库异常
             logging.error('读取数据库异常，无法完成数据库初始化')
             self.initDbButton.setIcon(QIcon('./icons/error.png'))
             self.logQueue.put('Error：读取数据库异常，初始化数据库失败')
@@ -681,7 +684,7 @@ class RecieveAlarm(QThread):
 
                 qmsg_Key = '3166ab158a1ae2912ddb3251fc893bf1'
 
-                url = f"https://qmsg.zendee.cn/send/{qmsg_Key}"
+                url = f"https://qmsg.zendee.cn:443/send/{qmsg_Key}"
                 headers = {'Content-Type': 'application/x-www-form-urlencoded'}
                 data = {
                     'msg': f"{qmsg_text}"
@@ -690,7 +693,7 @@ class RecieveAlarm(QThread):
                 response = requests.post(url, data=data)
 
                 if json.loads(response.text)['success'] == True:
-                    print("Qmsg酱 消息推送成功")
+                    print("Qmsg酱 陌生人消息推送成功")
 
                 # 报警响铃
                 # print('while running isBellEnabled:', self.isBellEnabled)
@@ -762,20 +765,24 @@ class RecieveAlarm(QThread):
                         jobs_confirm.append(p1)
 
                     #QQ推送
-                    message = '{} {} 签到成功！'.format(stu_id, zh_name)
+                    print('开启QQ推送')
+                    qmsg_message = ' {} 签到成功！'.format( zh_name)
 
                     qmsg_Key = '3166ab158a1ae2912ddb3251fc893bf1'
 
-                    url = f"https://qmsg.zendee.cn/send/{qmsg_Key}"
+                    url = f"https://qmsg.zendee.cn:443/send/{qmsg_Key}"
                     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
                     data = {
-                        'msg': f"{message}"
+                        "msg": f"{qmsg_message}",
+                        "qq": "1779508535"
                     }
 
                     response = requests.post(url, data=data)
 
                     if json.loads(response.text)['success'] == True:
                         print("Qmsg酱 消息推送成功")
+                    else:
+                        print("推送失败")
 
                     # TelegramBot推送
                     # print('while running isTelegramBotPushEnabled:', self.isTelegramBotPushEnabled)
@@ -814,7 +821,7 @@ class FaceProcessingThread(QThread):
         self.isPanalarmEnabled = False  # 报警系统
 
         self.isDebugMode = False  # 调试模式
-        self.confidenceThreshold = 55  # 置信度阈值
+        self.confidenceThreshold = 50  # 置信度阈值
         self.autoAlarmThreshold = 65  # 报警阈值
 
         self.isEqualizeHistEnabled = False  # 直方图均衡化
@@ -917,7 +924,7 @@ class FaceProcessingThread(QThread):
     def find_faces_by_haar(self, gray):
         # 执行直方图均衡化
         if self.isEqualizeHistEnabled:
-            gray = cv2.equalizeHist(gray)
+            gray = cv2.equalizeHist(gray)   #灰度图
         # 分类器进行人脸侦测,返回结果face是一个list保存矩形x,y,h,w
         faces = haar_faceCascade.detectMultiScale(gray, 1.3, 7, minSize=(80, 80))
         # 1.image为输入的灰度图像
@@ -1417,7 +1424,7 @@ class FaceProcessingThread(QThread):
         self.quit()
         self.wait()
 
-
+#创建考勤
 class CreatClassDialog(QDialog):
 
     def __init__(self):

@@ -119,6 +119,7 @@ class DataRecordUI(QWidget):
         self.ExcelpathButton.clicked.connect(self.import_excel_data)
         self.ImportPersonButton.clicked.connect(self.person_import_thread)
 
+    #连接数据库
     @staticmethod
     def connect_to_sql():
         conn = pymysql.connect(host='localhost',
@@ -130,26 +131,27 @@ class DataRecordUI(QWidget):
         cursor = conn.cursor()
         return conn, cursor
 
-    # 单人导入图片集【主线程】弃用
+    # 单人导入图片集
     def import_person_imageset(self):
         if self.isUserInfoReady:  # 学生信息确认
             stu_id = self.userInfo.get('stu_id')
             self.ImportPersonButton.setIcon(QIcon('./icons/success.png'))
+            #读取图片
             image_paths = QFileDialog.getOpenFileNames(self, '选择图片',
                                                        "./",
                                                        'JEPG files(*.jpg);;PNG files(*.PNG)')
             if not os.path.exists('{}/stu_{}'.format(self.datasets, stu_id)):
-                os.makedirs('{}/stu_{}'.format(self.datasets, stu_id))
+                os.makedirs('{}/stu_{}'.format(self.datasets, stu_id))  #创建存储
             image_paths = image_paths[0]
             for index, path in enumerate(image_paths):
                 try:
                     img = cv2.imread(path)
                     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # 灰度图
                     faces = self.faceCascade.detectMultiScale(gray, 1.3, 5, minSize=(90, 90))  # 分类器侦测人脸
-                    if len(faces) == 0:
+                    if len(faces) == 0:    #没有检测到人脸
                         self.logQueue.put('图片{}中没有检测到人脸！'.format(path))
                         continue
-                    for (x, y, w, h) in faces:
+                    for (x, y, w, h) in faces:  #检测到人脸
                         if len(faces) > 1:
                             raise RecordDisturbance
                         cv2.imwrite('{}/stu_{}/img.{}-{}.jpg'.format(self.datasets, stu_id, index, ''.join(
@@ -172,7 +174,7 @@ class DataRecordUI(QWidget):
 
     # 表格导入学生信息
     def import_excel_data(self):
-
+        #选择表格
         excel_paths = QFileDialog.getOpenFileNames(self, '选择表格',
                                                    "./",
                                                    'EXCEL 文件 (*.xlsx;*.xls;*.xlm;*.xlt;*.xlsm;*.xla)')
@@ -180,7 +182,7 @@ class DataRecordUI(QWidget):
         conn, cursor = self.connect_to_sql()
         error_count = 0
         for path in excel_paths:
-            sheets_file = xlrd.open_workbook(path)
+            sheets_file = xlrd.open_workbook(path)    #打开表格读取
             for index, sheet in enumerate(sheets_file.sheets()):
                 self.logQueue.put("正在读取文件：" + str(path) + "的第" + str(index) + "个sheet表的内容...")
                 for row in range(sheet.nrows):
@@ -221,7 +223,7 @@ class DataRecordUI(QWidget):
     def import_image_thread(self):
         self.image_paths = QFileDialog.getOpenFileNames(self, '选择图片',
                                                         "./",
-                                                        'JEPG files(*.jpg);;PNG files(*.PNG)')
+                                                        'JEPG files(*.jpg);;PNG files(*.PNG);;BMP files(*.BMP)')
         self.image_paths = self.image_paths[0]
         if len(self.image_paths) != 0:  # 点击导入但是没有选择文件时不需启动线程
             progress_bar = ActionsImportImage(self)
@@ -235,7 +237,7 @@ class DataRecordUI(QWidget):
 
             image_paths = QFileDialog.getOpenFileNames(self, '选择图片',
                                                        "./",
-                                                       'JEPG files(*.jpg);;PNG files(*.PNG)')
+                                                       'JEPG files(*.jpg);;PNG files(*.PNG);;BMP files(*.BMP)')
             self.image_paths = image_paths[0]
             if len(self.image_paths) != 0:  # 点击导入但是没有选择文件时不需启动线程
                 if not os.path.exists('{}/stu_{}'.format(self.datasets, stu_id)):
@@ -249,7 +251,7 @@ class DataRecordUI(QWidget):
             self.ImportPersonButton.setChecked(False)
             self.logQueue.put('Error：操作失败，系统未检测到有效的用户信息')
 
-    # 图片批量导入【主线程】弃用
+    # 图片批量导入  以学号命名导入
     def import_images_data(self):
         image_paths = QFileDialog.getOpenFileNames(self, '选择图片',
                                                    "./",
@@ -762,7 +764,7 @@ class UserInfoDialog(QDialog):
         self.setFixedSize(613, 593)
 
         # 使用正则表达式限制用户输入
-        stu_id_regx = QRegExp('^[0-9]{10}$')  # 10位学号，如1604010901
+        stu_id_regx = QRegExp('^[0-9]{10}$')  # 10位工号号，如1604010901
         stu_id_validator = QRegExpValidator(stu_id_regx, self.stuIDLineEdit)
         self.stuIDLineEdit.setValidator(stu_id_validator)
 
@@ -778,7 +780,7 @@ class UserInfoDialog(QDialog):
         major_validator = QRegExpValidator(major_regx, self.MajorLineEdit)
         self.MajorLineEdit.setValidator(major_validator)
 
-        grade_regx = QRegExp('^[0-9]{4}$')  # 年级/入学年份，4位数字
+        grade_regx = QRegExp('^[0-9]{4}$')  # 入职年份，4位数字
         grade_validator = QRegExpValidator(grade_regx, self.GradeLineEdit)
         self.GradeLineEdit.setValidator(grade_validator)
 
@@ -790,7 +792,7 @@ class UserInfoDialog(QDialog):
         sex_validator = QRegExpValidator(sex_regx, self.SexLineEdit)
         self.SexLineEdit.setValidator(sex_validator)
 
-        province_regx = QRegExp('^[\u4e00-\u9fa5]{1,10}$')  # 生源地，只允许输入省份全称
+        province_regx = QRegExp('^[\u4e00-\u9fa5]{1,10}$')  # 籍贯，只允许输入省份全称
         province_validator = QRegExpValidator(province_regx, self.ProvinceLineEdit)
         self.ProvinceLineEdit.setValidator(province_validator)
 
@@ -833,7 +835,7 @@ class ImportImageThread(QThread):
         print('OK')
 
 
-# 进度条
+# 图集导入进度条
 class ActionsImportImage(QDialog):
     """
     Simple dialog that consists of a Progress Bar and a Button.
